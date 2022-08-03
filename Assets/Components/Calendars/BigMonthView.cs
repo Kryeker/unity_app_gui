@@ -526,9 +526,13 @@ namespace Components.Calendars {
 				case MonthType.Current:
 					return new DateTime(m_Date.Year, m_Date.Month, targetCell.Day);
 				case MonthType.Previous:
-					return new DateTime(m_Date.Year, m_Date.Month - 1, targetCell.Day);
 				case MonthType.Next:
-					return new DateTime(m_Date.Year, m_Date.Month + 1, targetCell.Day);
+					int month = m_Date.Month + targetCell.monthType == MonthType.Previous ? -1 : +1;
+					if (targetCell.Day > DateTime.DaysInMonth(m_Date.Year, month))
+					{
+						targetCell.Day = DateTime.DaysInMonth(m_Date.Year, month);
+					}
+					return new DateTime(m_Date.Year, Mathf.Clamp(month, 0, 12), targetCell.Day);
 				default:
 					return DateTime.Today;
 			}
